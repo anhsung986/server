@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaperMC Server Hub v4.0 Ultimate</title>
+    <style>
+        :root {
+            --bg-dark: #0b0f19;
+            --bg-card: #162032;
+            --bg-input: #233148;
+            --primary: #10b981;
+            --primary-hover: #059669;
+            --accent-play: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background: var(--bg-dark); color: var(--text-main); padding: 12px; line-height: 1.5; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+        .logo-title { font-size: 1.3rem; font-weight: 800; color: var(--primary); }
+        .btn-play-free { background: linear-gradient(135deg, #f59e0b, #ef4444); color: #fff; padding: 10px 18px; border-radius: 20px; font-weight: 700; text-decoration: none; font-size: 0.9rem; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); }
+        .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; margin-bottom: 20px; }
+        .nav-btn { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-muted); padding: 10px 8px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: 600; text-align: center; }
+        .nav-btn.active, .nav-btn:hover { background: var(--primary); color: #000; border-color: var(--primary); }
+        .card { background: var(--bg-card); border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid var(--border); }
+        .card-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 14px; color: var(--primary); }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+        .form-group { margin-bottom: 14px; }
+        label { display: block; font-size: 0.825rem; color: var(--text-muted); margin-bottom: 5px; font-weight: 600; }
+        select, input[type="text"], input[type="number"] { width: 100%; padding: 10px; background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; color: #fff; font-size: 0.9rem; }
+        .toggle-group { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--bg-input); transition: .3s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--primary); }
+        input:checked + .slider:before { transform: translateX(20px); }
+        .btn-group { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+        .btn { flex: 1; min-width: 130px; padding: 11px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; text-align: center; font-size: 0.85rem; }
+        .btn-primary { background: var(--primary); color: #000; }
+        .btn-secondary { background: var(--bg-input); color: #fff; border: 1px solid var(--border); }
+        pre { background: #080c14; padding: 14px; border-radius: 8px; border: 1px solid var(--border); overflow-x: auto; font-family: monospace; font-size: 0.825rem; color: #a7f3d0; white-space: pre-wrap; word-break: break-all; margin-top: 10px; }
+        .tab-section { display: none; }
+        .tab-section.active { display: block; }
+        .motd-preview { background: #000; border: 2px solid #555; padding: 12px; font-family: monospace; font-size: 1rem; border-radius: 6px; margin-top: 10px; min-height: 50px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-title">⚡ PaperMC Server Hub v4.0 Ultimate</div>
+            <a href="https://eaglercraft.com/" target="_blank" class="btn-play-free">🎮 Chơi Minecraft Free Online</a>
+        </header>
+
+        <div class="nav-grid">
+            <button class="nav-btn active" onclick="showTab('tool-1')">1. Script Startup</button>
+            <button class="nav-btn" onclick="showTab('tool-2')">2. Tính RAM</button>
+            <button class="nav-btn" onclick="showTab('tool-3')">3. Server.props</button>
+            <button class="nav-btn" onclick="showTab('tool-4')">4. MOTD Colors</button>
+            <button class="nav-btn" onclick="showTab('tool-5')">5. Ping Status</button>
+            <button class="nav-btn" onclick="showTab('tool-6')">6. Lệnh Admin</button>
+            <button class="nav-btn" onclick="showTab('tool-7')">7. Mã Màu HEX</button>
+            <button class="nav-btn" onclick="showTab('tool-8')">8. Whitelist/Ops</button>
+            <button class="nav-btn" onclick="showTab('tool-9')">9. Auto Backup</button>
+            <button class="nav-btn" onclick="showTab('tool-10')">10. Linux Systemd</button>
+            <button class="nav-btn" onclick="showTab('tool-11')">11. Chunky Pre-gen</button>
+            <button class="nav-btn" onclick="showTab('tool-12')">12. Paper.yml</button>
+            <button class="nav-btn" onclick="showTab('tool-13')">13. Plugins Hay</button>
+            <button class="nav-btn" onclick="showTab('tool-14')">14. Java Matrix</button>
+            <button class="nav-btn" onclick="showTab('tool-15')">15. Sửa Crash Log</button>
+            <button class="nav-btn" onclick="showTab('tool-16')">16. Tính Băng Thông</button>
+            <button class="nav-btn" onclick="showTab('tool-17')">17. Proxy Velocity</button>
+            <button class="nav-btn" onclick="showTab('tool-18')">18. Playit.gg</button>
+            <button class="nav-btn" onclick="showTab('tool-19')">19. Đếm Uptime</button>
+            <button class="nav-btn" onclick="showTab('tool-20')">20. Chơi MC Web</button>
+        </div>
+
+        <!-- 1. STARTUP SCRIPT -->
+        <div id="tool-1" class="tab-section active">
+            <div class="card">
+                <div class="card-title">1. Trình Tạo Script Khởi Động Tối Ưu (.bat / .sh)</div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Hệ Điều Hành</label>
+                        <select id="os" onchange="genScript()">
+                            <option value="bat">Windows (.bat)</option>
+                            <option value="sh">Linux / VPS (.sh)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Dung Lượng RAM (GB)</label>
+                        <input type="number" id="ram" value="8" min="1" max="128" oninput="genScript()">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Cờ Garbage Collector</label>
+                    <select id="gc" onchange="genScript()">
+                        <option value="aikar">Aikar's Flags (G1GC - Khuyên Dùng)</option>
+                        <option value="zgc">Generational ZGC (Java 21)</option>
+                        <option value="none">Cơ Bản</option>
+                    </select>
+                </div>
+                <div class="toggle-group">
+                    <span>Tự động Restart khi crash</span>
+                    <label class="switch"><input type="checkbox" id="restart" checked onchange="genScript()"><span class="slider"></span></label>
+                </div>
+                <div class="toggle-group">
+                    <span>Chạy không GUI (--nogui)</span>
+                    <label class="switch"><input type="checkbox" id="nogui" checked onchange="genScript()"><span class="slider"></span></label>
+                </div>
+                <div class="form-group" style="margin-top:10px;">
+                    <label>Tên File Jar</label>
+                    <input type="text" id="jar" value="paper.jar" oninput="genScript()">
+                </div>
+                <pre id="out-script"></pre>
+            </div>
+        </div>
+
+        <!-- 2. RAM CALCULATOR -->
+        <div id="tool-2" class="tab-section">
+            <div class="card">
+                <div class="card-title">2. Bộ Tính Toán RAM Cần Thiết</div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Số Player Online</label>
+                        <input type="number" id="players" value="20" oninput="calcRam()">
+                    </div>
+                    <div class="form-group">
+                        <label>Số Plugin / Mods</label>
+                        <input type="number" id="plugins" value="30" oninput="calcRam()">
+                    </div>
+                </div>
+                <div id="ram-result" style="background:var(--bg-input); padding:15px; border-radius:8px; font-weight:bold; color:var(--primary);">
+                    Khuyên Dùng: 6 GB RAM
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. SERVER.PROPERTIES -->
+        <div id="tool-3" class="tab-section">
+            <div class="card">
+                <div class="card-title">3. Bộ Tạo File server.properties Chống Lag</div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>View Distance</label>
+                        <input type="number" id="vd" value="6" oninput="genProps()">
+                    </div>
+                    <div class="form-group">
+                        <label>Simulation Distance</label>
+                        <input type="number" id="sd" value="4" oninput="genProps()">
+                    </div>
+                </div>
+                <pre id="out-props"></pre>
+            </div>
+        </div>
+
+        <!-- 4. MOTD GENERATOR -->
+        <div id="tool-4" class="tab-section">
+            <div class="card">
+                <div class="card-title">4. Bộ Tạo MOTD Màu Sắc</div>
+                <div class="form-group">
+                    <label>Dòng 1</label>
+                    <input type="text" id="motd1" value="&a&lMINECRAFT SERVER &7| &e&lSURVIVAL 1.20" oninput="genMotd()">
+                </div>
+                <div class="form-group">
+                    <label>Dòng 2</label>
+                    <input type="text" id="motd2" value="&bChao mung ban den voi Server!" oninput="genMotd()">
+                </div>
+                <div id="motd-prev" class="motd-preview"></div>
+                <pre id="out-motd"></pre>
+            </div>
+        </div>
+
+        <!-- 5. PING CHECKER -->
+        <div id="tool-5" class="tab-section">
+            <div class="card">
+                <div class="card-title">5. Kiểm Tra Trạng Thái Server (Ping)</div>
+                <div class="form-group">
+                    <label>IP Server Minecraft</label>
+                    <input type="text" id="ping-ip" value="play.hypixel.net">
+                </div>
+                <button class="btn btn-primary" onclick="pingServer()">🔍 Kiểm Tra</button>
+                <div id="ping-result" style="margin-top:15px;"></div>
+            </div>
+        </div>
+
+        <!-- 6. ADMIN COMMANDS -->
+        <div id="tool-6" class="tab-section">
+            <div class="card">
+                <div class="card-title">6. Bảng Tra Cứu Lệnh Admin</div>
+                <pre>/op [tên] - Cấp quyền Admin
+/deop [tên] - Tước quyền Admin
+/ban [tên] [Lý do] - Cấm người chơi
+/whitelist add [tên] - Thêm danh sách trắng
+/gamerule keepInventory true - Giữ đồ khi chết
+/spark profiler start - Kiểm tra lag TPS</pre>
+            </div>
+        </div>
+
+        <!-- 7. COLOR CODES -->
+        <div id="tool-7" class="tab-section">
+            <div class="card">
+                <div class="card-title">7. Bảng Mã Màu Legacy & HEX</div>
+                <pre>&0: Đen    &1: Xanh Dương    &2: Xanh Lá    &3: Cyan
+&4: Đỏ     &5: Tím           &6: Vàng       &7: Xám Nhạt
+&a: Lá Nhạt &b: Aqua          &c: Đỏ Nhạt    &e: Vàng Nhạt
+&l: In Đậm  &m: Gạch Ngang    &n: Gạch Dưới  &o: In Nghiêng</pre>
+            </div>
+        </div>
+
+        <!-- 8. WHITELIST & OPS -->
+        <div id="tool-8" class="tab-section">
+            <div class="card">
+                <div class="card-title">8. Tạo File ops.json Nhanh</div>
+                <div class="form-group">
+                    <label>Tên Admin (Cách bởi dấu phẩy)</label>
+                    <input type="text" id="ops-names" value="AdminPlayer, ModPlayer">
+                </div>
+                <pre id="out-ops"></pre>
+                <button class="btn btn-primary" onclick="genOps()">⚙️ Tạo JSON</button>
+            </div>
+        </div>
+
+        <!-- 9. AUTO BACKUP -->
+        <div id="tool-9" class="tab-section">
+            <div class="card">
+                <div class="card-title">9. Script Auto Backup Map</div>
+                <pre>@echo off
+set backupfolder=Backups\%date:~10,4%-%date:~4,2%-%date:~7,2%
+mkdir %backupfolder%
+xcopy /s /e /i world %backupfolder%\world
+echo Sao luu hoan tat!</pre>
+            </div>
+        </div>
+
+        <!-- 10. LINUX SYSTEMD -->
+        <div id="tool-10" class="tab-section">
+            <div class="card">
+                <div class="card-title">10. Linux Systemd Service</div>
+                <pre>[Unit]
+Description=Minecraft PaperMC Server
+After=network.target
+
+[Service]
+WorkingDirectory=/home/minecraft/server
+ExecStart=/usr/bin/java -Xms8G -Xmx8G -XX:+UseG1GC -jar paper.jar --nogui
+Restart=always
+
+[Install]
+WantedBy=multi-user.target</pre>
+            </div>
+        </div>
+
+        <!-- 11. CHUNKY PRE-GEN -->
+        <div id="tool-11" class="tab-section">
+            <div class="card">
+                <div class="card-title">11. Lệnh Chunky Pre-generation</div>
+                <pre>/chunky radius 5000
+/chunky pattern rectangle
+/chunky start
+/chunky worldborder set 5000</pre>
+            </div>
+        </div>
+
+        <!-- 12. PAPER YML -->
+        <div id="tool-12" class="tab-section">
+            <div class="card">
+                <div class="card-title">12. Paper-world-defaults.yml Tối Ưu</div>
+                <pre>hoppers:
+  disable-move-event: true
+redstone-implementation: ALTERNATE_CURRENT
+chunks:
+  max-auto-save-chunks-per-tick: 6</pre>
+            </div>
+        </div>
+
+        <!-- 13. MUST-HAVE PLUGINS -->
+        <div id="tool-13" class="tab-section">
+            <div class="card">
+                <div class="card-title">13. Top Plugin Nên Cài</div>
+                <pre>1. EssentialsX: Bộ lệnh quản trị cơ bản
+2. LuckPerms: Quản lý phân quyền Rank
+3. Vault: Cầu nối Tiền tệ Economy
+4. WorldGuard & WorldEdit: Bảo vệ khu vực
+5. Spark: Đo TPS & kiểm tra lag</pre>
+            </div>
+        </div>
+
+        <!-- 14. JAVA MATRIX -->
+        <div id="tool-14" class="tab-section">
+            <div class="card">
+                <div class="card-title">14. Ma Trận Tương Thích Java</div>
+                <pre>Minecraft 1.20.5 - 1.21+: Java 21
+Minecraft 1.18 - 1.20.4: Java 17
+Minecraft 1.12.2 - 1.16.5: Java 8 / Java 11</pre>
+            </div>
+        </div>
+
+        <!-- 15. CRASH LOG -->
+        <div id="tool-15" class="tab-section">
+            <div class="card">
+                <div class="card-title">15. Khắc Phục Lỗi Crash Common</div>
+                <pre>1. OutOfMemoryError: Hết RAM -> Tăng -Xmx trong script.
+2. Port 25565 in use: Trùng port -> Đổi port trong server.properties.
+3. UnsupportedClassVersionError: Sai bản Java JDK.</pre>
+            </div>
+        </div>
+
+        <!-- 16. BANDWIDTH -->
+        <div id="tool-16" class="tab-section">
+            <div class="card">
+                <div class="card-title">16. Tính Băng Thông Mạng</div>
+                <div class="form-group">
+                    <label>Số Player Online</label>
+                    <input type="number" id="bw-players" value="30" oninput="calcBW()">
+                </div>
+                <div id="bw-res" style="font-weight:bold; color:var(--primary);">
+                    Khuyên dùng: 15 Mbps Upload
+                </div>
+            </div>
+        </div>
+
+        <!-- 17. VELOCITY PROXY -->
+        <div id="tool-17" class="tab-section">
+            <div class="card">
+                <div class="card-title">17. Cấu Hình Proxy Velocity</div>
+                <pre>Trong paper-global.yml:
+proxies:
+  velocity:
+    enabled: true
+    online-mode: true
+    secret: "NHAP_SECRET_KEY"</pre>
+            </div>
+        </div>
+
+        <!-- 18. PLAYIT.GG -->
+        <div id="tool-18" class="tab-section">
+            <div class="card">
+                <div class="card-title">18. Mở Port Với Playit.gg</div>
+                <pre>1. Tải ứng dụng Playit.gg về máy.
+2. Chọn Add Tunnel -> Chọn Minecraft Java (Port 25565).
+3. Copy link IP free gửi cho bạn bè kết nối.</pre>
+            </div>
+        </div>
+
+        <!-- 19. RESTART TIMER -->
+        <div id="tool-19" class="tab-section">
+            <div class="card">
+                <div class="card-title">19. Khuyên Dùng Restart Định Kỳ</div>
+                <div style="font-size:1.4rem; font-weight:bold; color:var(--primary); text-align:center; padding:15px;">
+                    Khuyên dùng Restart Server mỗi 6 - 12 tiếng để giải phóng bộ nhớ RAM.
+                </div>
+            </div>
+        </div>
+
+        <!-- 20. PLAY FREE MINECRAFT -->
+        <div id="tool-20" class="tab-section">
+            <div class="card">
+                <div class="card-title">20. Chơi Minecraft Free Trực Tiếp Trên Web</div>
+                <div class="btn-group">
+                    <a href="https://eaglercraft.com/" target="_blank" class="btn btn-primary" style="text-decoration:none;">🎮 Eaglercraft (MC 1.8 Web)</a>
+                    <a href="https://classic.minecraft.net/" target="_blank" class="btn btn-secondary" style="text-decoration:none;">🧱 Minecraft Classic Web</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(id) {
+            document.querySelectorAll('.tab-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function genScript() {
+            const os = document.getElementById('os').value;
+            const ram = document.getElementById('ram').value;
+            const gc = document.getElementById('gc').value;
+            const jar = document.getElementById('jar').value || 'paper.jar';
+            const restart = document.getElementById('restart').checked;
+            const nogui = document.getElementById('nogui').checked;
+
+            let gcFlags = "";
+            if (gc === 'aikar') gcFlags = "-XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch";
+            if (gc === 'zgc') gcFlags = "-XX:+UseZGC -XX:+ZGenerational";
+
+            let noguiStr = nogui ? " --nogui" : "";
+            let code = "";
+
+            if (os === 'bat') {
+                code = `@echo off\n:start\njava -Xms${ram}G -Xmx${ram}G ${gcFlags} -jar ${jar}${noguiStr}\n`;
+                if (restart) code += `echo Server stop. Restarting in 5s...\ntimeout /t 5\ngoto start`;
+                else code += `pause`;
+            } else {
+                code = `#!/bin/bash\n`;
+                if (restart) code += `while true; do\n  java -Xms${ram}G -Xmx${ram}G ${gcFlags} -jar ${jar}${noguiStr}\n  sleep 5\ndone`;
+                else code += `java -Xms${ram}G -Xmx${ram}G ${gcFlags} -jar ${jar}${noguiStr}`;
+            }
+            document.getElementById('out-script').innerText = code;
+        }
+
+        function calcRam() {
+            const p = parseInt(document.getElementById('players').value) || 0;
+            const pl = parseInt(document.getElementById('plugins').value) || 0;
+            let rec = Math.max(2, Math.ceil((p * 0.15) + (pl * 0.08) + 1.5));
+            document.getElementById('ram-result').innerText = `Khuyên Dùng: ${rec} GB RAM`;
+        }
+
+        function genProps() {
+            const vd = document.getElementById('vd').value;
+            const sd = document.getElementById('sd').value;
+            document.getElementById('out-props').innerText = `view-distance=${vd}\nsimulation-distance=${sd}\nonline-mode=false\nserver-port=25565`;
+        }
+
+        function genMotd() {
+            const m1 = document.getElementById('motd1').value;
+            const m2 = document.getElementById('motd2').value;
+            document.getElementById('out-motd').innerText = `motd=${m1}\\n${m2}`;
+            document.getElementById('motd-prev').innerText = m1 + "\n" + m2;
+        }
+
+        function genOps() {
+            const names = document.getElementById('ops-names').value.split(',');
+            const json = names.map(n => ({ name: n.trim(), level: 4 }));
+            document.getElementById('out-ops').innerText = JSON.stringify(json, null, 2);
+        }
+
+        function calcBW() {
+            const p = parseInt(document.getElementById('bw-players').value) || 0;
+            document.getElementById('bw-res').innerText = `Khuyên dùng: ${Math.ceil(p * 0.5)} Mbps Upload`;
+        }
+
+        async function pingServer() {
+            const ip = document.getElementById('ping-ip').value;
+            const resDiv = document.getElementById('ping-result');
+            resDiv.innerText = "Đang kiểm tra...";
+            try {
+                const res = await fetch(`https://api.mcsrvstat.us/2/${ip}`);
+                const data = await res.json();
+                if (data.online) resDiv.innerHTML = `🟢 Server ONLINE | Players: ${data.players.online}/${data.players.max}`;
+                else resDiv.innerHTML = `🔴 Server OFFLINE`;
+            } catch(e) { resDiv.innerText = "Lỗi kết nối."; }
+        }
+
+        genScript();
+        genProps();
+        genMotd();
+    </script>
+</body>
+</html>
