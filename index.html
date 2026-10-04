@@ -1,1 +1,785 @@
+```html
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VietMC - Cộng Đồng Minecraft Server Việt Nam</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&family=Orbitron:wght@600;800;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Be Vietnam Pro', 'sans-serif'],
+                        display: ['Orbitron', 'sans-serif'],
+                    },
+                    colors: {
+                        mc: {
+                            dark: '#0a0d14',
+                            card: '#121824',
+                            border: '#1e293b',
+                            green: '#10b981',
+                            cyan: '#06b6d4',
+                            purple: '#a855f7',
+                            gold: '#f59e0b'
+                        }
+                    },
+                    animation: {
+                        'pulse-glow': 'pulseGlow 2s infinite alternate',
+                        'float': 'float 4s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        pulseGlow: {
+                            '0%': { boxShadow: '0 0 15px rgba(16, 185, 129, 0.2)' },
+                            '100%': { boxShadow: '0 0 30px rgba(16, 185, 129, 0.6)' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 
+    <style>
+        /* Modern Glassmorphism & Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0d14;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+
+        .glass-panel {
+            background: rgba(18, 24, 36, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-card-green {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(18, 24, 36, 0.8) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+        }
+        .glass-card-green:hover {
+            border-color: rgba(16, 185, 129, 0.6);
+            box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.3);
+        }
+
+        .glass-card-cyan {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(18, 24, 36, 0.8) 100%);
+            border: 1px solid rgba(6, 182, 212, 0.25);
+        }
+        .glass-card-cyan:hover {
+            border-color: rgba(6, 182, 212, 0.6);
+            box-shadow: 0 10px 30px -10px rgba(6, 182, 212, 0.3);
+        }
+
+        .text-gradient-green {
+            background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .text-gradient-cyan {
+            background: linear-gradient(135deg, #38bdf8 0%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-bg {
+            background-image: radial-gradient(circle at 50% 20%, rgba(16, 185, 129, 0.15) 0%, transparent 50%),
+                              radial-gradient(circle at 80% 60%, rgba(6, 182, 212, 0.1) 0%, transparent 40%),
+                              linear-gradient(to bottom, #0a0d14, #0d121d);
+        }
+
+        .grid-pattern {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        }
+    </style>
+</head>
+<body class="bg-mc-dark text-slate-200 font-sans antialiased min-h-screen selection:bg-emerald-500 selection:text-white">
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- Header & Navigation -->
+    <header class="fixed top-0 left-0 w-full z-40 glass-panel border-b border-slate-800/80 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Logo -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-lg bg-gradient-to-tr from-emerald-600 to-teal-400 p-0.5 flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-transform">
+                    <div class="w-full h-full bg-slate-950 rounded-[7px] flex items-center justify-center">
+                        <i class="fa-solid fa-[#cube] fa-cubes text-emerald-400 text-xl"></i>
+                    </div>
+                </div>
+                <div>
+                    <span class="font-display font-black text-xl tracking-wider text-white">VIET<span class="text-emerald-400">MC</span></span>
+                    <span class="block text-[10px] text-slate-400 -mt-1 font-semibold tracking-widest uppercase">Direct Server Network</span>
+                </div>
+            </a>
+
+            <!-- Desktop Menu -->
+            <nav class="hidden md:flex items-center gap-8 font-medium text-sm text-slate-300">
+                <a href="#home" class="hover:text-emerald-400 transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-house text-xs opacity-70"></i> Trang Chủ
+                </a>
+                <a href="#servers" class="hover:text-emerald-400 transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-server text-xs opacity-70"></i> Máy Chủ
+                </a>
+                <a href="#features" class="hover:text-emerald-400 transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-star text-xs opacity-70"></i> Tính Năng
+                </a>
+                <a href="#rules" class="hover:text-emerald-400 transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-book text-xs opacity-70"></i> Quy Định & Lệnh
+                </a>
+            </nav>
+
+            <!-- Discord CTA Button -->
+            <div class="hidden md:flex items-center gap-4">
+                <a href="https://discord.gg" target="_blank" rel="noopener" class="px-4 py-2.5 rounded-xl bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 font-medium text-sm flex items-center gap-2 transition-all hover:scale-105">
+                    <i class="fa-brands fa-discord text-base"></i>
+                    <span>Tham Gia Discord</span>
+                </a>
+            </div>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button id="mobile-menu-btn" class="md:hidden p-2.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white focus:outline-none">
+                <i class="fa-solid fa-bars text-xl" id="menu-icon"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Drawer -->
+        <div id="mobile-menu" class="hidden md:hidden glass-panel border-b border-slate-800 px-4 pt-2 pb-6 flex flex-col gap-3 text-sm">
+            <a href="#home" class="mobile-nav-link py-2 px-3 rounded-lg hover:bg-slate-800 text-slate-200">Trang Chủ</a>
+            <a href="#servers" class="mobile-nav-link py-2 px-3 rounded-lg hover:bg-slate-800 text-slate-200">Máy Chủ (2 SV)</a>
+            <a href="#features" class="mobile-nav-link py-2 px-3 rounded-lg hover:bg-slate-800 text-slate-200">Tính Năng</a>
+            <a href="#rules" class="mobile-nav-link py-2 px-3 rounded-lg hover:bg-slate-800 text-slate-200">Quy Định & Lệnh</a>
+            <a href="https://discord.gg" target="_blank" class="py-2.5 px-3 rounded-lg bg-indigo-600 text-white font-medium text-center flex items-center justify-center gap-2 mt-2">
+                <i class="fa-brands fa-discord"></i> Tham Gia Discord
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative pt-32 pb-20 md:pt-44 md:pb-32 hero-bg grid-pattern overflow-hidden">
+        <!-- Light Glow Accents -->
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            
+            <!-- Direct Connection Notice Pill -->
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900/80 border border-slate-700/60 text-xs font-semibold text-emerald-400 mb-6 shadow-xl animate-float">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                <span>Hệ Thống 2 Máy Chủ Độc Lập - Kết Nối Trực Tiếp (Không Proxy)</span>
+            </div>
+
+            <!-- Main Heading -->
+            <h1 class="text-4xl sm:text-6xl lg:text-7xl font-display font-black tracking-tight text-white mb-6 uppercase leading-tight">
+                Cộng Đồng <span class="text-gradient-green">Minecraft</span><br>
+                Trải Nghiệm <span class="text-gradient-cyan">Đỉnh Cao</span>
+            </h1>
+
+            <p class="max-w-2xl mx-auto text-slate-400 text-base sm:text-lg mb-10 leading-relaxed">
+                Chào mừng bạn đến với VietMC Network! Lựa chọn chế độ chơi yêu thích của bạn và kết nối trực tiếp vào từng máy chủ chuyên biệt với đường truyền mượt mà, TPS 20 ổn định.
+            </p>
+
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto">
+                <a href="#servers" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-extrabold text-base shadow-lg shadow-emerald-500/25 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-3">
+                    <i class="fa-solid fa-gamepad text-lg"></i>
+                    <span>XEM MÁY CHỦ NGAY</span>
+                </a>
+                <a href="#direct-guide" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-200 border border-slate-700 font-semibold text-base transition-all flex items-center justify-center gap-3">
+                    <i class="fa-solid fa-circle-info text-slate-400"></i>
+                    <span>Hướng Dẫn Vào Game</span>
+                </a>
+            </div>
+
+            <!-- Network Stats Bar -->
+            <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+                <div class="glass-panel p-4 rounded-2xl">
+                    <div class="text-2xl font-bold font-display text-white" id="stat-total-players">231</div>
+                    <div class="text-xs text-slate-400 mt-1">Người chơi Online</div>
+                </div>
+                <div class="glass-panel p-4 rounded-2xl">
+                    <div class="text-2xl font-bold font-display text-emerald-400">20.0</div>
+                    <div class="text-xs text-slate-400 mt-1">TPS Trung Bình</div>
+                </div>
+                <div class="glass-panel p-4 rounded-2xl">
+                    <div class="text-2xl font-bold font-display text-cyan-400">1.16 - 1.20+</div>
+                    <div class="text-xs text-slate-400 mt-1">Phiên bản hỗ trợ</div>
+                </div>
+                <div class="glass-panel p-4 rounded-2xl">
+                    <div class="text-2xl font-bold font-display text-purple-400">0 ms</div>
+                    <div class="text-xs text-slate-400 mt-1">Proxy Delay (Direct IP)</div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Server List Section -->
+    <section id="servers" class="py-20 relative bg-mc-dark">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-xs font-bold uppercase tracking-widest text-emerald-400 mb-2">DANH SÁCH MÁY CHỦ</h2>
+                <p class="text-3xl sm:text-4xl font-display font-extrabold text-white">2 Máy Chủ Riêng Biệt - Kết Nối Trực Tiếp</p>
+                <p class="text-slate-400 text-sm mt-3">
+                    Mỗi máy chủ vận hành độc lập trên cổng (Port) riêng. Người chơi chỉ cần copy đúng địa chỉ IP và Port tương ứng để tham gia trực tiếp trong game!
+                </p>
+            </div>
+
+            <!-- Servers Grid (2 Separate Cards) -->
+            <div class="grid md:grid-cols-2 gap-8 lg:gap-10">
+                
+                <!-- Server 1 Card (Survival) -->
+                <div class="glass-card-green rounded-3xl p-6 sm:p-8 relative flex flex-col justify-between transition-all duration-300">
+                    
+                    <!-- Top Badge & Status -->
+                    <div>
+                        <div class="flex items-center justify-between gap-2 mb-6">
+                            <span class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 uppercase tracking-wider">
+                                MÁY CHỦ 1 • SURVIVAL
+                            </span>
+                            <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/80 border border-slate-800 text-xs text-emerald-400 font-medium">
+                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                <span id="s1-status">Online</span>
+                            </div>
+                        </div>
+
+                        <!-- Server Title & Version -->
+                        <div class="mb-4">
+                            <h3 class="text-2xl sm:text-3xl font-display font-extrabold text-white mb-1">
+                                Survival Việt Nam
+                            </h3>
+                            <p class="text-xs text-slate-400 flex items-center gap-2">
+                                <i class="fa-solid fa-code-branch text-emerald-400"></i> Phiên bản: <span class="text-slate-200 font-semibold">1.16 - 1.20.x</span>
+                            </p>
+                        </div>
+
+                        <!-- Description -->
+                        <p class="text-slate-300 text-sm leading-relaxed mb-6">
+                            Chế độ sinh tồn truyền thống nâng cấp với hệ thống Claim đất bảo vệ tài sản, Chợ người chơi (Auction House), Quái vật Custom phong phú, Kỹ năng Jobs và Quest hàng ngày hấp dẫn.
+                        </p>
+
+                        <!-- Feature Badges -->
+                        <div class="flex flex-wrap gap-2 mb-8">
+                            <span class="text-xs px-2.5 py-1 rounded-lg bg-slate-900/60 text-slate-300 border border-slate-800">
+                                <i class="fa-solid fa-[#shield] fa-shield-halved text-emerald-400 mr-1"></i> Anti-Grief
+                            </span>
+                            <span class="text-xs px-2.5 py-1 rounded-lg bg-slate-900/60 text-slate-300 border border-slate-800">
+                                <i class="fa-solid fa-coins text-amber-400 mr-1"></i> Kinh Tế Nông Dân
+                            </span>
+                            <span class="text-xs px-2.5 py-1 rounded-lg bg-slate-900/60 text-slate-300 border border-slate-800">
+                                <i class="fa-solid fa-dragon text-purple-400 mr-1"></i> Custom Boss
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- IP Box & Copy Section -->
+                    <div class="bg-slate-950/80 rounded-2xl p-4 border border-slate-800/80">
+                        <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+                            <span>ĐỊA CHỈ IP KẾT NỐI TRỰC TIẾP</span>
+                            <span class="text-emerald-400 font-mono" id="s1-players">142/200 Người chơi</span>
+                        </div>
+                        
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1 bg-slate-900 px-4 py-3 rounded-xl border border-slate-800 font-mono text-emerald-400 text-sm sm:text-base font-bold truncate tracking-wide selection:bg-emerald-500/30">
+                                play.vietmc.net:25565
+                            </div>
+                            <button onclick="copyToClipboard('play.vietmc.net:25565', 'Survival Việt Nam')" class="px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm transition-all flex items-center gap-2 active:scale-95 shadow-md shadow-emerald-500/20 whitespace-nowrap">
+                                <i class="fa-regular fa-copy"></i>
+                                <span class="hidden sm:inline">Sao Chép IP</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Server 2 Card (Skyblock / Minigame) -->
+                <div class="glass-card-cyan rounded-3xl p-6 sm:p-8 relative flex flex-col justify-between transition-all duration-300">
+                    
+                    <!-- Top Badge & Status -->
+                    <div>
+                        <div class="flex items-center justify-between gap-2 mb-6">
+                            <span class="px-3 py-1 rounded-full text-xs font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 uppercase tracking-wider">
+                                MÁY CHỦ 2 • SKYBLOCK
+                            </span>
+                            <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/80 border border-slate-800 text-xs text-cyan-400 font-medium">
+                                <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></span>
+                                <span id="s2-status">Online</span>
+                            </div>
+                        </div>
+
+                        <!-- Server Title & Version -->
+                        <div class="mb-4">
+                            <h3 class="text-2xl sm:text-3xl font-display font-extrabold text-white mb-1">
+                                Skyblock Legend
+                            </h3>
+                            <p class="text-xs text-slate-400 flex items-center gap-2">
+                                <i class="fa-solid fa-code-branch text-cyan-400"></i> Phiên bản: <span class="text-slate-200 font-semibold">1.18 - 1.20.x</span>
+                            </p>
+                        </div>
+
+                        <!-- Description -->
+                        <p class="text-slate-300 text-sm leading-relaxed mb-6">
+                            Xây dựng đảo trên không từ hư không! Hệ thống Minions tự động làm việc, Máy tạo quặng nâng cấp (Ore Generator), Đảo Bang Hội (Is War) và hầm ngục Dungeon thử thách cực đỉnh.
+                        </p>
+
+                        <!-- Feature Badges -->
+                        <div class="flex flex-wrap gap-2 mb-8">
+                            <span class="text-xs px-2.5 py-1 rounded-lg bg-slate-900/60 text-slate-300 border border-slate-800">
+                                <i class="fa-solid fa-robot text-cyan-400 mr-1"></i> Auto Minions
+                            </span>
+                            <span class="text-xs px-2.5 py-1 rounded-lg bg-slate-900/60 text-slate-300 border border-slate-800">
+                                <i class="fa-solid fa-trophy text-amber-400 mr-1"></i> Top Đảo Hàng Tuần
+                            </span>
+                            <span class="text-xs px-2.5 py-1 rounded-lg bg-slate-900/60 text-slate-300 border border-slate-800">
+                                <i class="fa-solid fa-dungeon text-red-400 mr-1"></i> Custom Dungeons
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- IP Box & Copy Section -->
+                    <div class="bg-slate-950/80 rounded-2xl p-4 border border-slate-800/80">
+                        <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+                            <span>ĐỊA CHỈ IP KẾT NỐI TRỰC TIẾP</span>
+                            <span class="text-cyan-400 font-mono" id="s2-players">89/200 Người chơi</span>
+                        </div>
+                        
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1 bg-slate-900 px-4 py-3 rounded-xl border border-slate-800 font-mono text-cyan-400 text-sm sm:text-base font-bold truncate tracking-wide selection:bg-cyan-500/30">
+                                sky.vietmc.net:25500
+                            </div>
+                            <button onclick="copyToClipboard('sky.vietmc.net:25500', 'Skyblock Legend')" class="px-5 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm transition-all flex items-center gap-2 active:scale-95 shadow-md shadow-cyan-500/20 whitespace-nowrap">
+                                <i class="fa-regular fa-copy"></i>
+                                <span class="hidden sm:inline">Sao Chép IP</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Direct Connection Explanation Box -->
+            <div id="direct-guide" class="mt-12 glass-panel p-6 sm:p-8 rounded-3xl border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-network-wired text-amber-400 text-xl"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-base font-bold text-white mb-1">Tại sao máy chủ không dùng BungeeCord / Proxy?</h4>
+                        <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                            Việc kết nối trực tiếp giúp tối ưu hóa băng thông, loại bỏ hoàn toàn độ trễ (delay) trung gian từ Proxy và đảm bảo nếu 1 máy chủ bảo trì thì máy chủ còn lại vẫn hoạt động bình thường 100%. Bạn chỉ cần thêm 2 IP tương ứng vào danh sách Server của game!
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Direct Connection Visual Guide Section -->
+    <section class="py-16 bg-slate-950/60 border-y border-slate-800/60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h3 class="text-2xl font-display font-bold text-white">Hướng Dẫn Vô Game Trong 3 Bước</h3>
+                <p class="text-slate-400 text-sm mt-1">Dễ dàng tham gia cho cả người chơi lâu năm lẫn tân thủ</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800 relative">
+                    <span class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-mono font-bold flex items-center justify-center text-sm mb-4 border border-emerald-500/30">1</span>
+                    <h4 class="text-base font-bold text-white mb-2">Mở Minecraft Multiplayer</h4>
+                    <p class="text-xs text-slate-400">Khởi động game Minecraft (phiên bản 1.16 trở lên), chọn mục <strong class="text-slate-200">Multiplayer (Chơi mạng)</strong>.</p>
+                </div>
+
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800 relative">
+                    <span class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-mono font-bold flex items-center justify-center text-sm mb-4 border border-emerald-500/30">2</span>
+                    <h4 class="text-base font-bold text-white mb-2">Thêm Server Hoặc Direct Connect</h4>
+                    <p class="text-xs text-slate-400">Nhấn nút <strong class="text-slate-200">Add Server (Thêm máy chủ)</strong> hoặc <strong class="text-slate-200">Direct Connection (Kết nối trực tiếp)</strong>.</p>
+                </div>
+
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800 relative">
+                    <span class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 font-mono font-bold flex items-center justify-center text-sm mb-4 border border-emerald-500/30">3</span>
+                    <h4 class="text-base font-bold text-white mb-2">Dán Địa Chỉ IP & Port</h4>
+                    <p class="text-xs text-slate-400">Dán IP của máy chủ bạn muốn chơi (Ví dụ: <code class="text-emerald-400 bg-slate-900 px-1 py-0.5 rounded">play.vietmc.net:25565</code>) và bấm Done!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-mc-dark">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-xs font-bold uppercase tracking-widest text-emerald-400 mb-2">ĐẶC ĐIỂM NỔI BẬT</h2>
+                <p class="text-3xl sm:text-4xl font-display font-extrabold text-white">Lý Do Bạn Nên Chọn VietMC</p>
+            </div>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <!-- Feature 1 -->
+                <div class="glass-panel p-6 rounded-2xl hover:border-emerald-500/40 transition-all group">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-shield-cat"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">Chống Hack / Cheat Mạnh Mẽ</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Hệ thống Anti-cheat tùy chỉnh ngăn chặn các hành vi gian lận, mang lại môi trường chơi game công bằng nhất cho mọi thành viên.
+                    </p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="glass-panel p-6 rounded-2xl hover:border-emerald-500/40 transition-all group">
+                    <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 text-xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">Đường Truyền Siêu Tốc</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Máy chủ đặt tại Datacenter Tier 3 Việt Nam, ping thấp từ 10-25ms cho toàn bộ game thủ trong nước, giữ mức FPS & TPS luôn 20.
+                    </p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="glass-panel p-6 rounded-2xl hover:border-emerald-500/40 transition-all group">
+                    <div class="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 text-xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-users-gear"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">Đội Ngũ Staff Thân Thiện</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Ban quản trị và Admin trực Discord/In-game 24/7, luôn lắng nghe đóng góp và giải quyết thắc mắc nhanh chóng.
+                    </p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="glass-panel p-6 rounded-2xl hover:border-emerald-500/40 transition-all group">
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-gift"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">Sự Kiện Hàng Tuần</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Sự kiện PvP Tournament, Parkour, Building Contest diễn ra đều đặn vào cuối tuần với nhiều phần quà VIP hấp dẫn.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Rules & Commands Section -->
+    <section id="rules" class="py-20 bg-slate-950/80 border-t border-slate-800/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="grid lg:grid-cols-2 gap-12">
+                
+                <!-- Commands Tab Block -->
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 class="text-2xl font-display font-bold text-white">Lệnh Cơ Bản Trong Game</h3>
+                            <p class="text-slate-400 text-xs mt-1">Các câu lệnh hữu ích người chơi mới cần biết</p>
+                        </div>
+                    </div>
+
+                    <!-- Command Filter Tabs -->
+                    <div class="flex gap-2 mb-4 overflow-x-auto pb-2">
+                        <button onclick="switchCommandTab('basic')" id="tab-btn-basic" class="cmd-tab-btn px-4 py-2 rounded-xl text-xs font-semibold bg-emerald-500 text-slate-950 transition-all">Cơ Bản</button>
+                        <button onclick="switchCommandTab('claim')" id="tab-btn-claim" class="cmd-tab-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">Claim Đất</button>
+                        <button onclick="switchCommandTab('economy')" id="tab-btn-economy" class="cmd-tab-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">Kinh Tế</button>
+                    </div>
+
+                    <!-- Commands Table List -->
+                    <div class="glass-panel rounded-2xl overflow-hidden border border-slate-800" id="cmd-list-container">
+                        <!-- Content dynamically populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Community Rules Block -->
+                <div>
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-display font-bold text-white">Quy Định Máy Chủ</h3>
+                        <p class="text-slate-400 text-xs mt-1">Vui lòng tuân thủ quy định để xây dựng cộng đồng văn minh</p>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+                        <div class="flex items-start gap-3 pb-3 border-b border-slate-800/60">
+                            <i class="fa-solid fa-circle-xmark text-red-400 text-base mt-0.5"></i>
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-200">Nghiêm cấm Hack / Client Gian Lận</h4>
+                                <p class="text-xs text-slate-400">Không sử dụng X-ray, Fly, KillAura hoặc bất kỳ mod gian lận nào. Vi phạm sẽ bị Xóa Account / Ban vĩnh viễn.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-3 pb-3 border-b border-slate-800/60">
+                            <i class="fa-solid fa-circle-xmark text-red-400 text-base mt-0.5"></i>
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-200">Không phá hoại (Griefing) công trình người khác</h4>
+                                <p class="text-xs text-slate-400">Hãy dùng lệnh <code class="text-emerald-400">/claim</code> để bảo vệ vùng đất của mình. Cố tình phá hoại khu vực xung quanh sẽ bị xử phạt.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-3 pb-3 border-b border-slate-800/60">
+                            <i class="fa-solid fa-comments text-amber-400 text-base mt-0.5"></i>
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-200">Tôn trọng người chơi & Chat văn minh</h4>
+                                <p class="text-xs text-slate-400">Không xúc phạm, phân biệt vùng miền, spam hoặc quảng cáo IP máy chủ khác trên kênh chat.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-3">
+                            <i class="fa-solid fa-shield-heart text-emerald-400 text-base mt-0.5"></i>
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-200">Báo cáo lỗi (Bug Report)</h4>
+                                <p class="text-xs text-slate-400">Nếu phát hiện lỗi game, hãy báo cho Staff qua Discord để nhận thưởng quà ingame. Cố tình lạm dụng lỗi sẽ bị khóa tài khoản.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Discord Banner Section -->
+    <section class="py-16 bg-gradient-to-r from-indigo-950/60 via-slate-900 to-slate-950 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="inline-block p-4 rounded-3xl bg-indigo-600/10 border border-indigo-500/20 mb-4">
+                <i class="fa-brands fa-discord text-4xl text-indigo-400"></i>
+            </div>
+            <h2 class="text-3xl sm:text-4xl font-display font-extrabold text-white mb-3">Gia Nhập Discord Cộng Đồng VietMC</h2>
+            <p class="text-slate-400 text-sm max-w-xl mx-auto mb-8">
+                Hơn 3,500+ thành viên đang chờ đón bạn! Cập nhật tin tức sự kiện, nhận giftcode hằng ngày và giao lưu cùng ban quản trị.
+            </p>
+            <a href="https://discord.gg" target="_blank" rel="noopener" class="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-base shadow-lg shadow-indigo-600/30 transition-all hover:scale-105">
+                <i class="fa-brands fa-discord text-xl"></i>
+                <span>THAM GIA DISCORD NGAY</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 py-12 border-t border-slate-900 text-slate-500 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+                    <i class="fa-solid fa-cubes"></i>
+                </div>
+                <div>
+                    <span class="font-display font-bold text-slate-200">VietMC Direct Network</span>
+                    <p class="text-[11px] text-slate-500">© 2026 VietMC. All Rights Reserved. Not an official Minecraft product.</p>
+                </div>
+            </div>
+
+            <!-- Social Links -->
+            <div class="flex items-center gap-6 text-base">
+                <a href="https://facebook.com" target="_blank" class="hover:text-emerald-400 transition-colors" title="Facebook Fanpage">
+                    <i class="fa-brands fa-facebook"></i>
+                </a>
+                <a href="https://discord.gg" target="_blank" class="hover:text-emerald-400 transition-colors" title="Discord Group">
+                    <i class="fa-brands fa-discord"></i>
+                </a>
+                <a href="https://youtube.com" target="_blank" class="hover:text-emerald-400 transition-colors" title="Youtube Channel">
+                    <i class="fa-brands fa-youtube"></i>
+                </a>
+            </div>
+
+        </div>
+    </footer>
+
+    <script>
+        // Data for Commands
+        const commandsData = {
+            basic: [
+                { cmd: '/spawn', desc: 'Trở về khu vực sảnh chính' },
+                { cmd: '/sethome [tên]', desc: 'Đánh dấu vị trí nhà của bạn' },
+                { cmd: '/home [tên]', desc: 'Dịch chuyển về vị trí nhà đã lưu' },
+                { cmd: '/tpa [tên_người_chơi]', desc: 'Gửi yêu cầu dịch chuyển tới ai đó' },
+                { cmd: '/tpaccept', desc: 'Chấp nhận yêu cầu dịch chuyển' },
+                { cmd: '/menu', desc: 'Mở menu tính năng nhanh' }
+            ],
+            claim: [
+                { cmd: '/claim', desc: 'Tạo vùng đất bảo vệ bằng Xẻng Vàng' },
+                { cmd: '/trust [tên]', desc: 'Cho phép bạn bè xây dựng chung trên đất' },
+                { cmd: '/untrust [tên]', desc: 'Hủy quyền xây dựng của người chơi' },
+                { cmd: '/abandonclaim', desc: 'Xóa vùng đất hiện tại bạn đang đứng' },
+                { cmd: '/claimlist', desc: 'Xem danh sách các khu đất đã claim' }
+            ],
+            economy: [
+                { cmd: '/money', desc: 'Kiểm tra số tiền hiện có' },
+                { cmd: '/pay [tên] [số_tiền]', desc: 'Chuyển tiền cho người chơi khác' },
+                { cmd: '/ah', desc: 'Mở Chợ đấu giá người chơi (Auction House)' },
+                { cmd: '/jobs', desc: 'Mở bảng công việc kiếm tiền' },
+                { cmd: '/shop', desc: 'Mở cửa hàng vật phẩm máy chủ' }
+            ]
+        };
+
+        // Render commands tab
+        function switchCommandTab(category) {
+            const container = document.getElementById('cmd-list-container');
+            const data = commandsData[category] || commandsData.basic;
+
+            // Update Tab UI active states
+            document.querySelectorAll('.cmd-tab-btn').forEach(btn => {
+                btn.classList.remove('bg-emerald-500', 'text-slate-950');
+                btn.classList.add('bg-slate-800', 'text-slate-300');
+            });
+            const activeBtn = document.getElementById(`tab-btn-${category}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-slate-800', 'text-slate-300');
+                activeBtn.classList.add('bg-emerald-500', 'text-slate-950');
+            }
+
+            // Build HTML
+            let html = '<div class="divide-y divide-slate-800/80">';
+            data.forEach(item => {
+                html += `
+                    <div class="p-3.5 sm:p-4 flex items-center justify-between gap-4 hover:bg-slate-900/50 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <code class="px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800 text-emerald-400 font-mono text-xs font-bold">${item.cmd}</code>
+                            <span class="text-xs sm:text-sm text-slate-300">${item.desc}</span>
+                        </div>
+                        <button onclick="copyRawText('${item.cmd}')" class="text-slate-500 hover:text-emerald-400 p-1 transition-colors text-xs" title="Sao chép lệnh">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        // Copy IP to Clipboard & Show Toast Notification
+        function copyToClipboard(text, serverName) {
+            copyRawText(text);
+            showToast(`Đã sao chép IP: <strong>${text}</strong> (${serverName})`);
+        }
+
+        function copyRawText(text) {
+            // Using textarea fallback for reliable copy in iframe environments
+            const el = document.createElement('textarea');
+            el.value = text;
+            el.setAttribute('readonly', '');
+            el.style.position = 'absolute';
+            el.style.left = '-9999px';
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+        }
+
+        // Custom Toast Notification System (No Alert)
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'glass-panel px-5 py-3.5 rounded-2xl border border-emerald-500/40 text-slate-100 text-xs sm:text-sm shadow-2xl flex items-center gap-3 pointer-events-auto transform translate-y-4 opacity-0 transition-all duration-300';
+            toast.innerHTML = `
+                <div class="w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-check text-xs"></i>
+                </div>
+                <div>${message}</div>
+            `;
+
+            container.appendChild(toast);
+
+            // Trigger enter animation
+            setTimeout(() => {
+                toast.classList.remove('translate-y-4', 'opacity-0');
+            }, 10);
+
+            // Auto dismiss
+            setTimeout(() => {
+                toast.classList.add('translate-y-4', 'opacity-0');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 3500);
+        }
+
+        // Player Counter & Status Simulation
+        let s1Players = 142;
+        let s2Players = 89;
+
+        function updatePlayerCounters() {
+            // Slight natural fluctuation simulation
+            const delta1 = Math.floor(Math.random() * 5) - 2;
+            const delta2 = Math.floor(Math.random() * 5) - 2;
+
+            s1Players = Math.max(100, Math.min(195, s1Players + delta1));
+            s2Players = Math.max(50, Math.min(180, s2Players + delta2));
+
+            const s1El = document.getElementById('s1-players');
+            const s2El = document.getElementById('s2-players');
+            const totalEl = document.getElementById('stat-total-players');
+
+            if (s1El) s1El.innerText = `${s1Players}/200 Người chơi`;
+            if (s2El) s2El.innerText = `${s2Players}/200 Người chơi`;
+            if (totalEl) totalEl.innerText = s1Players + s2Players;
+        }
+
+        // Mobile Menu Drawer Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', () => {
+                const isHidden = mobileMenu.classList.contains('hidden');
+                if (isHidden) {
+                    mobileMenu.classList.remove('hidden');
+                    menuIcon.classList.remove('fa-bars');
+                    menuIcon.classList.add('fa-xmark');
+                } else {
+                    mobileMenu.classList.add('hidden');
+                    menuIcon.classList.remove('fa-xmark');
+                    menuIcon.classList.add('fa-bars');
+                }
+            });
+
+            // Close mobile menu on link click
+            document.querySelectorAll('.mobile-nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                    menuIcon.classList.remove('fa-xmark');
+                    menuIcon.classList.add('fa-bars');
+                });
+            });
+        }
+
+        // Initial setup on load
+        window.addEventListener('load', () => {
+            switchCommandTab('basic');
+            setInterval(updatePlayerCounters, 4000);
+        });
+    </script>
+</body>
+</html>
